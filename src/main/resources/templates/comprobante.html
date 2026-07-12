@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Comprobante - GameZone</title>
+
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">🎮 GAMEZONE</div>
+
+    <nav class="nav-links">
+        <a th:href="@{/}">Tienda</a>
+        <a th:href="@{/biblioteca}">Biblioteca</a>
+        <a th:href="@{/carrito}">Carrito</a>
+    </nav>
+
+    <div class="user-area">
+        <span th:text="${usuario.nombre}"></span>
+    </div>
+</header>
+
+<main class="voucher-page">
+
+    <section class="voucher-card" id="comprobante">
+
+        <div class="voucher-header">
+            <div>
+                <h1>GAMEZONE</h1>
+                <p>Comprobante de compra simulado</p>
+            </div>
+
+            <span class="voucher-status"
+                  th:text="${compra.estado}">
+            </span>
+        </div>
+
+        <hr>
+
+        <div class="voucher-info">
+
+            <p>
+                <strong>Código de operación:</strong>
+                <span th:text="${compra.codigoOperacion}"></span>
+            </p>
+
+            <p>
+                <strong>Fecha:</strong>
+                <span th:text="${#temporals.format(
+                    compra.fecha,
+                    'dd/MM/yyyy HH:mm'
+                )}"></span>
+            </p>
+
+            <p>
+                <strong>Cliente:</strong>
+                <span th:text="${usuario.nombre}"></span>
+            </p>
+
+            <p>
+                <strong>Correo:</strong>
+                <span th:text="${usuario.correo}"></span>
+            </p>
+
+            <p>
+                <strong>Método de pago:</strong>
+                <span th:text="${compra.metodoPago}"></span>
+            </p>
+
+            <p>
+                <strong>Tarjeta:</strong>
+                **** **** ****
+                <span th:text="${compra.ultimosDigitosTarjeta}"></span>
+            </p>
+
+        </div>
+
+        <div class="voucher-product">
+
+            <img th:src="${compra.imagen}"
+                 alt="Imagen del juego">
+
+            <div>
+                <h2 th:text="${compra.juego}"></h2>
+                <p>Producto digital</p>
+            </div>
+
+            <strong>
+                S/
+                <span th:text="${#numbers.formatDecimal(
+                    compra.precio,
+                    1,
+                    2
+                )}"></span>
+            </strong>
+
+        </div>
+
+        <div class="voucher-total">
+
+            <span>Total pagado</span>
+
+            <strong>
+                S/
+                <span th:text="${#numbers.formatDecimal(
+                    compra.precio,
+                    1,
+                    2
+                )}"></span>
+            </strong>
+
+        </div>
+
+        <p class="voucher-warning">
+            Comprobante simulado para fines académicos.
+            Sin validez tributaria.
+        </p>
+
+<div class="voucher-actions">
+
+    <a th:href="@{/comprobante/{id}/pdf(id=${compra.id})}">
+        Descargar PDF
+    </a>
+
+    <button type="button"
+            onclick="window.print()">
+        Imprimir
+    </button>
+
+    <a th:href="@{/biblioteca}">
+        Ir a mi biblioteca
+    </a>
+
+</div>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

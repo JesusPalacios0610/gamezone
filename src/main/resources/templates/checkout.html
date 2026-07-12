@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - GameZone</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">🎮 GAMEZONE</div>
+
+    <nav class="nav-links">
+        <a th:href="@{/}">Tienda</a>
+        <a th:href="@{/carrito}">Carrito</a>
+        <a th:href="@{/biblioteca}">Biblioteca</a>
+    </nav>
+</header>
+
+<main class="checkout-container">
+
+    <section class="checkout-card">
+
+        <h1>Finalizar compra</h1>
+
+        <p th:if="${param.error}" class="error-message">
+            Revisa los datos de la tarjeta.
+        </p>
+
+        <h2>Resumen</h2>
+
+        <div th:each="item : ${carrito.items}" class="checkout-item">
+            <span th:text="${item.nombreJuego}"></span>
+            <strong>
+                S/
+                <span th:text="${#numbers.formatDecimal(item.subtotal,1,2)}"></span>
+            </strong>
+        </div>
+
+        <h2>
+            Total:
+            S/
+            <span th:text="${#numbers.formatDecimal(total,1,2)}"></span>
+        </h2>
+
+        <form th:action="@{/checkout/pagar}" method="post" class="admin-form">
+
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+
+            <input type="text"
+                   name="titular"
+                   placeholder="Nombre del titular"
+                   required>
+
+            <input type="text"
+                   name="numeroTarjeta"
+                   placeholder="Número de tarjeta fake"
+                   maxlength="16"
+                   required>
+
+            <input type="text"
+                   name="vencimiento"
+                   placeholder="MM/AA"
+                   required>
+
+            <input type="password"
+                   name="cvv"
+                   placeholder="CVV"
+                   maxlength="4"
+                   required>
+
+            <button type="submit">
+                Pagar ahora
+            </button>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

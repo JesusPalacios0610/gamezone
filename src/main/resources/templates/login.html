@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - GameZone</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-card">
+
+    <h1>🎮 GAMEZONE</h1>
+
+    <h2>Iniciar sesión</h2>
+
+    <p class="error-message" th:if="${param.error}">
+        Correo o contraseña incorrectos.
+    </p>
+
+    <p class="success-message" th:if="${param.registroExitoso}">
+        Registro exitoso. Ahora inicia sesión.
+    </p>
+
+    <form th:action="@{/login}" method="post">
+
+        <input type="email"
+               name="username"
+               placeholder="Correo electrónico"
+               required>
+
+        <input type="password"
+               name="password"
+               placeholder="Contraseña"
+               required>
+
+        <button type="submit">
+            Ingresar
+        </button>
+
+    </form>
+
+    <p>
+        ¿No tienes cuenta?
+        <a th:href="@{/registro}">Crear cuenta</a>
+    </p>
+
+    <a class="back-link" th:href="@{/}">
+        Volver a la tienda
+    </a>
+
+</div>
+
+</body>
+
+</html>

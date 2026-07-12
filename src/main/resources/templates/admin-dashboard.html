@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin - GameZone</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">🎮 GAMEZONE ADMIN</div>
+
+    <nav class="nav-links">
+        <a th:href="@{/}">Tienda</a>
+        <a th:href="@{/admin/juegos}">Juegos</a>
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/usuarios}">Usuarios</a>
+        <a th:href="@{/admin/ventas}">
+    Ventas
+</a>
+    </nav>
+</header>
+
+<main class="dashboard-container">
+
+    <h1>Dashboard de administración</h1>
+
+    <section class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <h3>👥 Usuarios</h3>
+            <p th:text="${totalUsuarios}"></p>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>🎮 Juegos</h3>
+            <p th:text="${totalJuegos}"></p>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>🛒 Ventas</h3>
+            <p th:text="${totalVentas}"></p>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>💰 Ingresos</h3>
+            <p>
+                S/
+                <span th:text="${#numbers.formatDecimal(totalIngresos, 1, 2)}"></span>
+            </p>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>🏆 Más vendido</h3>
+            <p th:text="${juegoMasVendido}"></p>
+        </div>
+
+    </section>
+
+    <section class="dashboard-charts">
+
+        <div class="chart-box">
+            <h2>🔥 Juegos más vendidos</h2>
+            <canvas id="ventasPorJuego"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h2>📈 Ingresos por fecha</h2>
+            <canvas id="ingresosPorFecha"></canvas>
+        </div>
+
+    </section>
+<section class="admin-sales-section">
+
+    <div class="admin-sales-header">
+
+        <div>
+            <h2>🧾 Ventas recientes</h2>
+            <p>Últimas operaciones realizadas en GameZone</p>
+        </div>
+
+        <a class="admin-sales-link"
+           th:href="@{/admin/ventas}">
+            Ver todas las ventas
+        </a>
+
+    </div>
+
+    <div class="admin-table-wrapper">
+
+        <table class="admin-sales-table">
+
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Juego</th>
+                <th>Precio</th>
+                <th>Método</th>
+                <th>Estado</th>
+                <th>Operación</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:if="${#lists.isEmpty(ultimasCompras)}">
+                <td colspan="7" class="admin-empty-row">
+                    Todavía no existen ventas registradas.
+                </td>
+            </tr>
+
+            <tr th:each="compra : ${ultimasCompras}">
+
+                <td th:text="${compra.fecha != null
+                    ? #temporals.format(compra.fecha, 'dd/MM/yyyy HH:mm')
+                    : '-'}">
+                </td>
+
+                <td th:text="${compra.usuario}"></td>
+
+                <td th:text="${compra.juego}"></td>
+
+                <td>
+                    S/
+                    <span th:text="${#numbers.formatDecimal(
+                        compra.precio != null ? compra.precio : 0,
+                        1,
+                        2
+                    )}">
+                    </span>
+                </td>
+
+                <td th:text="${compra.metodoPago != null
+                    ? compra.metodoPago
+                    : '-'}">
+                </td>
+
+                <td>
+                    <span class="sale-status"
+                          th:classappend="${compra.estado == 'APROBADA'}
+                              ? ' sale-status-approved'
+                              : ' sale-status-pending'"
+                          th:text="${compra.estado != null
+                              ? compra.estado
+                              : 'PENDIENTE'}">
+                    </span>
+                </td>
+
+                <td th:text="${compra.codigoOperacion != null
+                    ? compra.codigoOperacion
+                    : '-'}">
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+</main>
+
+<script th:inline="javascript">
+    const juegosLabels = /*[[${juegosLabels}]]*/ [];
+    const juegosVentas = /*[[${juegosVentas}]]*/ [];
+    const fechasLabels = /*[[${fechasLabels}]]*/ [];
+    const ingresosData = /*[[${ingresosData}]]*/ [];
+
+    new Chart(document.getElementById('ventasPorJuego'), {
+        type: 'bar',
+        data: {
+            labels: juegosLabels,
+            datasets: [{
+                label: 'Ventas',
+                data: juegosVentas
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('ingresosPorFecha'), {
+        type: 'line',
+        data: {
+            labels: fechasLabels,
+            datasets: [{
+                label: 'Ingresos S/',
+                data: ingresosData
+            }]
+        }
+    });
+</script>
+
+</body>
+
+</html>

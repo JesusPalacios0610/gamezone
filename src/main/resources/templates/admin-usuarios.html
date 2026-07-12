@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios - GameZone</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        🎮 GAMEZONE ADMIN
+    </div>
+
+    <nav class="nav-links">
+
+        <a th:href="@{/}">
+            Tienda
+        </a>
+
+        <a th:href="@{/admin/juegos}">
+            Juegos
+        </a>
+
+        <a th:href="@{/admin/dashboard}">
+            Dashboard
+        </a>
+
+        <a th:href="@{/admin/usuarios}">
+            Usuarios
+        </a>
+
+    </nav>
+
+</header>
+
+<main class="admin-container">
+
+    <section class="admin-list-panel">
+
+        <h1>Administración de Usuarios</h1>
+
+        <table class="users-table">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr th:each="u : ${usuarios}">
+
+                    <td th:text="${u.id}"></td>
+
+                    <td th:text="${u.nombre}"></td>
+
+                    <td th:text="${u.correo}"></td>
+
+                    <td th:text="${u.rol}"></td>
+
+                    <td>
+
+                        <form th:action="@{/admin/usuarios/rol/{id}(id=${u.id})}"
+                              method="post"
+                              style="display:inline;">
+
+                            <input type="hidden"
+                                   th:name="${_csrf.parameterName}"
+                                   th:value="${_csrf.token}">
+
+                            <button class="details-btn"
+                                    type="submit">
+
+                                Cambiar Rol
+
+                            </button>
+
+                        </form>
+
+                        <form th:action="@{/admin/usuarios/eliminar/{id}(id=${u.id})}"
+                              method="post"
+                              style="display:inline;">
+
+                            <input type="hidden"
+                                   th:name="${_csrf.parameterName}"
+                                   th:value="${_csrf.token}">
+
+                            <button class="delete-btn"
+                                    type="submit">
+
+                                Eliminar
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

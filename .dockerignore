@@ -1,0 +1,9 @@
+target
+.git
+.github
+.vscode
+.env
+src/main/resources/application-local.properties
+*.log
+gamezone-respaldo.sql
+gamezone-aiven.sql

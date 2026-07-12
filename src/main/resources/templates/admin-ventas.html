@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Ventas - GameZone Admin</title>
+
+    <link rel="stylesheet"
+          th:href="@{/styles.css}">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        🎮 GAMEZONE ADMIN
+    </div>
+
+    <nav class="nav-links">
+
+        <a th:href="@{/}">
+            Tienda
+        </a>
+
+        <a th:href="@{/admin/juegos}">
+            Juegos
+        </a>
+
+        <a th:href="@{/admin/dashboard}">
+            Dashboard
+        </a>
+
+        <a th:href="@{/admin/ventas}"
+           class="active">
+            Ventas
+        </a>
+
+        <a th:href="@{/admin/usuarios}">
+            Usuarios
+        </a>
+
+    </nav>
+
+</header>
+
+<main class="admin-sales-page">
+
+    <section class="admin-sales-title">
+
+        <div>
+            <h1>Historial de ventas</h1>
+
+            <p>
+                Consulta todas las compras realizadas
+                dentro de GameZone.
+            </p>
+        </div>
+
+        <a class="admin-back-button"
+           th:href="@{/admin/dashboard}">
+            Volver al dashboard
+        </a>
+
+    </section>
+
+    <section class="admin-sales-summary">
+
+        <div class="admin-summary-card">
+
+            <span>Total de ventas</span>
+
+            <strong th:text="${totalVentas}">
+                0
+            </strong>
+
+        </div>
+
+        <div class="admin-summary-card">
+
+            <span>Ingresos acumulados</span>
+
+            <strong>
+                S/
+                <span th:text="${#numbers.formatDecimal(
+                    totalIngresos,
+                    1,
+                    2
+                )}">
+                    0.00
+                </span>
+            </strong>
+
+        </div>
+
+    </section>
+
+    <section class="admin-sales-section">
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-sales-table">
+
+                <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Juego</th>
+                    <th>Precio</th>
+                    <th>Método</th>
+                    <th>Tarjeta</th>
+                    <th>Estado</th>
+                    <th>Código</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr th:if="${#lists.isEmpty(compras)}">
+
+                    <td colspan="9"
+                        class="admin-empty-row">
+
+                        Todavía no existen compras registradas.
+
+                    </td>
+
+                </tr>
+
+                <tr th:each="compra : ${compras}">
+
+                    <td th:text="${compra.id}">
+                    </td>
+
+                    <td th:text="${compra.fecha != null
+                        ? #temporals.format(
+                            compra.fecha,
+                            'dd/MM/yyyy HH:mm'
+                        )
+                        : '-'}">
+                    </td>
+
+                    <td th:text="${compra.usuario}">
+                    </td>
+
+                    <td th:text="${compra.juego}">
+                    </td>
+
+                    <td>
+                        S/
+                        <span th:text="${#numbers.formatDecimal(
+                            compra.precio != null
+                                ? compra.precio
+                                : 0,
+                            1,
+                            2
+                        )}">
+                        </span>
+                    </td>
+
+                    <td th:text="${compra.metodoPago != null
+                        ? compra.metodoPago
+                        : '-'}">
+                    </td>
+
+                    <td>
+                        ****
+                        <span th:text="${compra.ultimosDigitosTarjeta != null
+                            ? compra.ultimosDigitosTarjeta
+                            : '----'}">
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <span class="sale-status"
+                              th:classappend="${compra.estado == 'APROBADA'}
+                                  ? ' sale-status-approved'
+                                  : ' sale-status-pending'"
+                              th:text="${compra.estado != null
+                                  ? compra.estado
+                                  : 'PENDIENTE'}">
+                        </span>
+
+                    </td>
+
+                    <td class="operation-code"
+                        th:text="${compra.codigoOperacion != null
+                            ? compra.codigoOperacion
+                            : '-'}">
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

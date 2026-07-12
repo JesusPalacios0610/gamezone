@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admin - GameZone</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">🎮 GAMEZONE ADMIN</div>
+
+    <nav class="nav-links">
+        <a th:href="@{/}">Tienda</a>
+        <a th:href="@{/biblioteca}">Biblioteca</a>
+
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button class="btn-small" type="submit">Salir</button>
+        </form>
+    </nav>
+</header>
+
+<main class="admin-container">
+
+    <section class="admin-form-panel">
+
+        <h1 th:text="${modoEditar} ? 'Editar juego' : 'Agregar juego'"></h1>
+
+        <form th:action="@{/admin/juegos}"
+              th:object="${juego}"
+              method="post"
+              class="admin-form">
+
+            <input type="hidden" th:field="*{id}">
+
+            <input th:field="*{nombre}"
+                   placeholder="Nombre del juego"
+                   required>
+
+            <input th:field="*{precio}"
+                   type="number"
+                   step="0.01"
+                   placeholder="Precio"
+                   required>
+
+            <input th:field="*{categoria}"
+                   placeholder="Categoría">
+
+            <input th:field="*{descuento}"
+                   type="number"
+                   step="0.01"
+                   placeholder="Descuento %">
+
+            <input th:field="*{imagen}"
+                   placeholder="URL de imagen"
+                   required>
+
+            <textarea th:field="*{descripcion}"
+                      placeholder="Descripción del juego"
+                      rows="5">
+            </textarea>
+
+            <label class="check-row">
+                <input type="checkbox" th:field="*{destacado}">
+                Marcar como destacado
+            </label>
+
+            <button type="submit"
+                    th:text="${modoEditar} ? 'Actualizar juego' : 'Guardar juego'">
+            </button>
+
+            <a th:if="${modoEditar}"
+               th:href="@{/admin/juegos}">
+                Cancelar edición
+            </a>
+
+        </form>
+
+    </section>
+
+    <section class="admin-list-panel">
+
+        <h2>Juegos registrados</h2>
+
+        <div class="admin-game-list">
+
+            <div class="admin-game-card" th:each="j : ${juegos}">
+
+                <img th:src="${j.imagen}" alt="Juego">
+
+                <div>
+                    <h3 th:text="${j.nombre}"></h3>
+
+                    <p>
+                        Categoría:
+                        <span th:text="${j.categoria != null ? j.categoria : 'General'}"></span>
+                    </p>
+
+                    <p>
+                        Precio:
+                        S/
+                        <span th:text="${#numbers.formatDecimal(j.precioFinal, 1, 2)}"></span>
+                    </p>
+
+                    <p th:if="${j.destacado != null and j.destacado}">
+                        ⭐ Destacado
+                    </p>
+                </div>
+
+                <div>
+                    <a class="btn-small"
+                       th:href="@{/admin/juegos/editar/{id}(id=${j.id})}">
+                        Editar
+                    </a>
+
+                    <form th:action="@{/admin/juegos/eliminar/{id}(id=${j.id})}"
+                          method="post">
+
+                        <button class="delete-btn" type="submit">
+                            Eliminar
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>
